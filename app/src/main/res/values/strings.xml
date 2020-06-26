@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">BTLAndroid</string>
+    <string name="app_name">Movie Infor</string>
     <string name="list_movies">List Movies</string>
     <string name="sign_up">SIGN UP</string>
     <string name="summary">Summary</string>
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
+    <string name="username">Username</string>
+    <string name="pass">Password</string>
 </resources>
