@@ -2,4 +2,7 @@
     <string name="app_name">BTLAndroid</string>
     <string name="list_movies">List Movies</string>
     <string name="sign_up">SIGN UP</string>
+    <string name="summary">Summary</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
 </resources>
