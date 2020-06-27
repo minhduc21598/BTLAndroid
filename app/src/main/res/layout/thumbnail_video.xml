@@ -9,6 +9,18 @@
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="200px"
         android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@+id/videoName"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:layout_marginTop="8dp"
+        android:lines="2"
+        android:maxLines="2"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

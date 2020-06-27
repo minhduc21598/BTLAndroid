@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,7 @@ public class ListTrailerAdapter extends RecyclerView.Adapter<ListTrailerAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Picasso.get().load(Constant.BASE_URL_IMAGE + listTrailers.get(position).getThumbnail()).into(holder.thumbnail);
         holder.thumbnail.getLayoutParams().width = 350;
-        holder.thumbnail.getLayoutParams().height = 200;
+        holder.name.setText(listTrailers.get(position).getName());
     }
 
     @Override
@@ -48,10 +49,11 @@ public class ListTrailerAdapter extends RecyclerView.Adapter<ListTrailerAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView thumbnail;
-
+        TextView name;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.thumbnail);
+            name = itemView.findViewById(R.id.videoName);
         }
     }
 }

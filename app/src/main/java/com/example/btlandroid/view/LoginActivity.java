@@ -2,17 +2,19 @@ package com.example.btlandroid.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.btlandroid.R;
 import com.example.btlandroid.configs.Constant;
@@ -22,17 +24,42 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
+    LinearLayout loginLayout;
     EditText username, password;
-    Button btnLogin;
+    TextView btnLogin, btnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        loginLayout = findViewById(R.id.loginLayout);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btnLogin);
+        btnSignUp = findViewById(R.id.linkToSignUp);
+
+        loginLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) LoginActivity.this.getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                if (username.isFocusable()) {
+                    username.clearFocus();
+                }
+                if (password.isFocusable()) {
+                    password.clearFocus();
+                }
+            }
+        });
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -71,4 +98,5 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
 }
