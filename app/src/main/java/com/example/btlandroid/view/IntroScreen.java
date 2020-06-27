@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.btlandroid.R;
 
-public class MainActivity extends AppCompatActivity {
+public class IntroScreen extends AppCompatActivity {
 
     Button btnTest;
     ImageView logoApp;
@@ -22,15 +22,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.intro_screen);
         init();
     }
 
     public void init() {
         logoApp = findViewById(R.id.logoApp);
         titleApp = findViewById(R.id.titleApp);
-        appear = AnimationUtils.loadAnimation(MainActivity.this, R.anim.anim_appear);
-        scale = AnimationUtils.loadAnimation(MainActivity.this, R.anim.anim_rotate);
+        appear = AnimationUtils.loadAnimation(IntroScreen.this, R.anim.anim_appear);
+        scale = AnimationUtils.loadAnimation(IntroScreen.this, R.anim.anim_rotate);
         titleApp.startAnimation(appear);
         logoApp.startAnimation(scale);
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(IntroScreen.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 }
