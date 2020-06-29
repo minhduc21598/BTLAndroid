@@ -11,7 +11,6 @@ import com.example.btlandroid.R;
 public class SignUpActivity extends AppCompatActivity {
     private  WebView webView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
