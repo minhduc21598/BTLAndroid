@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.example.btlandroid.model.Movie;
 import com.example.btlandroid.model.Trailer;
 import com.example.btlandroid.model.User;
 import com.example.btlandroid.model.UserReview;
+import com.example.btlandroid.utils.NetworkReceiver;
 import com.example.btlandroid.view.recycleview.ListReviewAdapter;
 import com.example.btlandroid.view.recycleview.ListSimilarAdapter;
 import com.example.btlandroid.view.recycleview.ListTrailerAdapter;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 
 public class MovieDetail extends AppCompatActivity {
 
+    NetworkReceiver networkReceiver = new NetworkReceiver();
     ScrollView scrollView;
     LinearLayout headerBack;
     RecyclerView viewListTrailers, viewListSimilar, viewListReview;
@@ -53,6 +57,19 @@ public class MovieDetail extends AppCompatActivity {
                 goBack();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkReceiver);
     }
 
     public void goBack() {

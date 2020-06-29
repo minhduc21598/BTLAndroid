@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.btlandroid">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logoapp"
@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/logoapp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".view.NoNetwork"></activity>
         <activity android:name=".view.MovieDetail" />
         <activity android:name=".view.Home" />
         <activity android:name=".view.SignUpActivity" />
@@ -20,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
