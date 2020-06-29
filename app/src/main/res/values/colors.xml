@@ -7,6 +7,7 @@
     <color name="black333">#333333</color>
     <color name="black1e1">#1e1e1e</color>
     <color name="black7f8">#7f878b</color>
+    <color name="orangeff6">#ff6600</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
 </resources>

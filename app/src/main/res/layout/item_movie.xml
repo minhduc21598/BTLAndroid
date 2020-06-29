@@ -24,8 +24,6 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:minLines="1"
             android:text="TextView"
             android:textColor="@color/white"
             android:textSize="13sp" />

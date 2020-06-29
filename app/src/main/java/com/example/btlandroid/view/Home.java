@@ -1,5 +1,7 @@
 package com.example.btlandroid.view;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,12 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btlandroid.R;
 import com.example.btlandroid.model.Movie;
+import com.example.btlandroid.utils.NetworkReceiver;
 import com.example.btlandroid.view.recycleview.ListMovieAdapter;
 
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
 
+    NetworkReceiver networkReceiver = new NetworkReceiver();
     ImageButton btnSearch;
     TextView label;
     EditText inputSearch;
@@ -80,9 +84,19 @@ public class Home extends AppCompatActivity {
             }
         });
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter);
+    }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkReceiver);
     }
 
     public void initRecycleView() {

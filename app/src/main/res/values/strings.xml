@@ -1,4 +1,17 @@
 <resources>
-    <string name="app_name">BTLAndroid</string>
+    <string name="app_name">Review Film</string>
     <string name="list_movies">List Movies</string>
+    <string name="sign_up"><u>Sign Up</u></string>
+    <string name="summary">Summary</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="username">Username</string>
+    <string name="pass">Password</string>
+    <string name="similar_movies">Similar movies</string>
+    <string name="details">Details</string>
+    <string name="sign_in">Sign In</string>
+    <string name="you_don_t_have_an_account">You don\'t have an account ?</string>
+    <string name="review_movie">Review Movie</string>
+    <string name="no_network_connection">No network connection</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -15,9 +15,9 @@ public class Movie {
     private ArrayList<UserReview> listReviews;
     private ArrayList<Genres> listGenres;
     private ArrayList<Trailer> listTrailers;
-    private ArrayList<Movie> listRecommends;
+    private ArrayList<Movie> listSimilar;
 
-    public Movie(String name, String description, int id, float voteAverage, String posterPath, String backdropPath, Date releaseDate, ArrayList<UserReview> listReviews, ArrayList<Genres> listGenres, ArrayList<Trailer> listTrailers, ArrayList<Movie> listRecommends) {
+    public Movie(String name, String description, int id, float voteAverage, String posterPath, String backdropPath, Date releaseDate, ArrayList<UserReview> listReviews, ArrayList<Genres> listGenres, ArrayList<Trailer> listTrailers, ArrayList<Movie> listSimilar) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -28,7 +28,7 @@ public class Movie {
         this.listReviews = listReviews;
         this.listGenres = listGenres;
         this.listTrailers = listTrailers;
-        this.listRecommends = listRecommends;
+        this.listSimilar = listSimilar;
     }
 
     public String getName() {
@@ -111,11 +111,11 @@ public class Movie {
         this.listTrailers = listTrailers;
     }
 
-    public ArrayList<Movie> getListRecommends() {
-        return listRecommends;
+    public ArrayList<Movie> getlistSimilar() {
+        return listSimilar;
     }
 
-    public void setListRecommends(ArrayList<Movie> listRecommends) {
-        this.listRecommends = listRecommends;
+    public void setlistSimilar(ArrayList<Movie> listSimilar) {
+        this.listSimilar = listSimilar;
     }
 }
