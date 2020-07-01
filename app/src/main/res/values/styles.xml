@@ -5,7 +5,15 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/black1e1</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="LoadingTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="LoginFormTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/orangeff6</item>
     </style>
 
 </resources>

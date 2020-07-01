@@ -138,38 +138,10 @@ public class MovieDetail extends AppCompatActivity {
         ListTrailerAdapter trailerAdapter = new ListTrailerAdapter(listTrailers, MovieDetail.this);
         viewListTrailers.setAdapter(trailerAdapter);
 
-        viewListSimilar = findViewById(R.id.listSimilar);
-        viewListSimilar.setHasFixedSize(true);
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(MovieDetail.this, RecyclerView.HORIZONTAL,false);
-        viewListSimilar.setLayoutManager(layoutManager2);
-        listSimilar.add(new Movie(
-            "Britt-Marie Was Here", null, 0, 0, "/1Duc3EBiegywczxTWekvy03HWai.jpg", null, null, null, null, null, null
-        ));
-        listSimilar.add(new Movie(
-            "Wasp Network", null, 0, 0, "/fOvqEunubL3wPskvtk2Ficfl0pH.jpg", null, null, null, null, null, null
-        ));
-        listSimilar.add(new Movie(
-            "Britt-Marie Was Here", null, 0, 0, "/1Duc3EBiegywczxTWekvy03HWai.jpg", null, null, null, null, null, null
-        ));
-        listSimilar.add(new Movie(
-            "Wasp Network", null, 0, 0, "/fOvqEunubL3wPskvtk2Ficfl0pH.jpg", null, null, null, null, null, null
-        ));
-        ListSimilarAdapter similarAdapter = new ListSimilarAdapter(listSimilar, MovieDetail.this);
-        viewListSimilar.setAdapter(similarAdapter);
-
         viewListReview = findViewById(R.id.listReviews);
         viewListReview.setHasFixedSize(true);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(MovieDetail.this, RecyclerView.VERTICAL, false);
         viewListReview.setLayoutManager(layoutManager3);
-        listReviews.add(new UserReview(
-            new User(
-                0,
-                "kinglargo",
-                null,
-                null
-            ),
-            "I had high expectation for Sonic, simply because I love the concept of \\\"super-speed\\\" but it didn't deliver. The latest trailer had all the good scenes. A lot of scenes involving super-speed are incoherent and made no sense. You cannot have a missile frozen in time and a the same time a button push going faster (that's just one example). Jim Carrey nailed the role as Eggman.\\r\\n\\r\\nhttps://wefishmovies.herokuapp.com/views/movie-info.php?tmdb_id=454626"
-        ));
         listReviews.add(new UserReview(
                 new User(
                     0,
@@ -190,5 +162,24 @@ public class MovieDetail extends AppCompatActivity {
         ));
         ListReviewAdapter listReviewAdapter = new ListReviewAdapter(listReviews, MovieDetail.this);
         viewListReview.setAdapter(listReviewAdapter);
+
+        viewListSimilar = findViewById(R.id.listSimilar);
+        viewListSimilar.setHasFixedSize(true);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(MovieDetail.this, RecyclerView.HORIZONTAL,false);
+        viewListSimilar.setLayoutManager(layoutManager2);
+        listSimilar.add(new Movie(
+                "Britt-Marie Was Here", null, 0, 0, "/1Duc3EBiegywczxTWekvy03HWai.jpg", null, null, null, null, null, null
+        ));
+        listSimilar.add(new Movie(
+                "Wasp Network", null, 0, 0, "/fOvqEunubL3wPskvtk2Ficfl0pH.jpg", null, null, null, null, null, null
+        ));
+        listSimilar.add(new Movie(
+                "Britt-Marie Was Here", null, 0, 0, "/1Duc3EBiegywczxTWekvy03HWai.jpg", null, null, null, null, null, null
+        ));
+        listSimilar.add(new Movie(
+                "Wasp Network", null, 0, 0, "/fOvqEunubL3wPskvtk2Ficfl0pH.jpg", null, null, null, null, null, null
+        ));
+        ListSimilarAdapter similarAdapter = new ListSimilarAdapter(listSimilar, MovieDetail.this);
+        viewListSimilar.setAdapter(similarAdapter);
     }
 }

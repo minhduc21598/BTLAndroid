@@ -11,13 +11,13 @@ public class Movie {
     private float voteAverage;
     private String posterPath;
     private String backdropPath;
-    private Date releaseDate;
+    private String releaseDate;
     private ArrayList<UserReview> listReviews;
     private ArrayList<Genres> listGenres;
     private ArrayList<Trailer> listTrailers;
     private ArrayList<Movie> listSimilar;
 
-    public Movie(String name, String description, int id, float voteAverage, String posterPath, String backdropPath, Date releaseDate, ArrayList<UserReview> listReviews, ArrayList<Genres> listGenres, ArrayList<Trailer> listTrailers, ArrayList<Movie> listSimilar) {
+    public Movie(String name, String description, int id, float voteAverage, String posterPath, String backdropPath, String releaseDate, ArrayList<UserReview> listReviews, ArrayList<Genres> listGenres, ArrayList<Trailer> listTrailers, ArrayList<Movie> listSimilar) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -79,11 +79,11 @@ public class Movie {
         this.backdropPath = backdropPath;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
