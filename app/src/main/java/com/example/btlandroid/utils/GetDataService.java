@@ -2,6 +2,7 @@ package com.example.btlandroid.utils;
 
 import com.example.btlandroid.model.dataAPI.MovieData;
 import com.example.btlandroid.model.dataAPI.ObjectResponseMovie;
+import com.example.btlandroid.model.dataAPI.RequestToken;
 
 import java.util.ArrayList;
 
@@ -14,5 +15,8 @@ public interface GetDataService {
 
     @GET("{type}")
     Call<ObjectResponseMovie> getMovieList(@Path("type") String type, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+
+    @GET("authentication/token/new")
+    Call<RequestToken> getToken(@Query("api_key") String api_key);
 
 }
