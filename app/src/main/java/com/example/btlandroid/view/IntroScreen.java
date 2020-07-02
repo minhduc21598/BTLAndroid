@@ -3,6 +3,7 @@ package com.example.btlandroid.view;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -38,12 +39,26 @@ public class IntroScreen extends AppCompatActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(IntroScreen.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    loadLogin();
                 }
             },2500
         );
+    }
+
+    public void loadLogin(){
+
+        SharedPreferences prefs = getSharedPreferences("InforAccount", MODE_PRIVATE);
+        String user = prefs.getString("username", "");
+        String pass = prefs.getString("password", "");
+        if(user.equals("") && pass.equals("")){
+            Intent intent = new Intent(IntroScreen.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(IntroScreen.this, Home.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 }

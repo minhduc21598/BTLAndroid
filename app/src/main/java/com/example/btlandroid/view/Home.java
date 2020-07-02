@@ -48,6 +48,7 @@ public class Home extends AppCompatActivity {
 
     ArrayList<Movie> listMovies = new ArrayList<Movie>();
     int page = 1;
+    String type = "filter";
     int selectedType = 0;
 
     ImageButton btFilter;
@@ -105,8 +106,9 @@ public class Home extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                type = "search";
                 LoadingProgress.show(Home.this);
-                searchMovie(inputSearch.getText().toString().trim());
+                searchMovie(inputSearch.getText().toString().trim(),false);
                 LoadingProgress.hide();
             }
 
@@ -221,7 +223,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    public void searchMovie(String keyWord) {
+    public void searchMovie(String keyWord, boolean loadMore) {
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<ObjectResponseMovie> call = service.getSearch(
                 Constant.API_KEY,
@@ -232,22 +234,24 @@ public class Home extends AppCompatActivity {
         call.enqueue(new Callback<ObjectResponseMovie>() {
             @Override
             public void onResponse(Call<ObjectResponseMovie> call, Response<ObjectResponseMovie> response) {
-                ArrayList<MovieData> lisResults = response.body().getResults();
-                listMovies.clear();
-                for (MovieData movie : lisResults) {
-                    ArrayList<Genres> list = new ArrayList<>();
-                    for(int id : movie.getGenre_ids()) {
-                        for (int i = 0;i < GetListGenres.getListGenres().size();i++) {
-                            if (id == GetListGenres.getListGenres().get(i).getId()) list.add(GetListGenres.getListGenres().get(i));
+                if(response.code() == 200) {
+                    ArrayList<MovieData> lisResults = response.body().getResults();
+                    if (!loadMore) listMovies.clear();
+                    for (MovieData movie : lisResults) {
+                        ArrayList<Genres> list = new ArrayList<>();
+                        for(int id : movie.getGenre_ids()) {
+                            for (int i = 0;i < GetListGenres.getListGenres().size();i++) {
+                                if (id == GetListGenres.getListGenres().get(i).getId()) list.add(GetListGenres.getListGenres().get(i));
+                            }
                         }
+                        listMovies.add(new Movie(
+                                movie.getTitle(), movie.getOverview(), movie.getId(), movie.getVote_average(), movie.getPoster_path(),
+                                movie.getBackdrop_path(), movie.getRelease_date(),null, list,null,null
+                        ));
                     }
-                    listMovies.add(new Movie(
-                            movie.getTitle(), movie.getOverview(), movie.getId(), movie.getVote_average(), movie.getPoster_path(),
-                            movie.getBackdrop_path(), movie.getRelease_date(),null, list,null,null
-                    ));
+                    ListMovieAdapter listMovieAdapter = new ListMovieAdapter(listMovies, Home.this);
+                    viewListMovie.setAdapter(listMovieAdapter);
                 }
-                ListMovieAdapter listMovieAdapter = new ListMovieAdapter(listMovies, Home.this);
-                viewListMovie.setAdapter(listMovieAdapter);
             }
 
             @Override
@@ -256,5 +260,13 @@ public class Home extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
+    }
+
 
 }

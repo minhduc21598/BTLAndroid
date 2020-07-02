@@ -34,6 +34,7 @@ import com.example.btlandroid.utils.GetListGenres;
 import com.example.btlandroid.utils.LoadingProgress;
 import com.example.btlandroid.utils.NetworkReceiver;
 import com.example.btlandroid.utils.RetrofitClientInstance;
+import com.example.btlandroid.utils.SaveCurrentMovie;
 import com.example.btlandroid.view.recycleview.ListReviewAdapter;
 import com.example.btlandroid.view.recycleview.ListSimilarAdapter;
 import com.example.btlandroid.view.recycleview.ListTrailerAdapter;
@@ -67,7 +68,7 @@ public class MovieDetail extends AppCompatActivity {
 
         LoadingProgress.show(MovieDetail.this);
 
-        movie = (Movie) getIntent().getSerializableExtra("movie");
+        movie = SaveCurrentMovie.getCurrentMovie();
         init();
         getTrailers();
         getReviews();

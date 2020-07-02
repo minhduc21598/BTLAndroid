@@ -4,6 +4,7 @@ import com.example.btlandroid.model.dataAPI.genres.ObjectResponseGenres;
 import com.example.btlandroid.model.dataAPI.movie.ObjectResponseMovie;
 import com.example.btlandroid.model.dataAPI.review.ObjectResponseReview;
 import com.example.btlandroid.model.dataAPI.trailer.ObjectResponseTrailer;
+import com.example.btlandroid.model.dataAPI.account.ObjectResponseRequestToken;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -29,4 +30,7 @@ public interface GetDataService {
 
     @GET("search/movie")
     Call<ObjectResponseMovie> getSearch(@Query("api_key") String apiKey, @Query("language") String language, @Query("query") String keyword, @Query("page") int page);
+
+    @GET("authentication/token/new")
+    Call<ObjectResponseRequestToken> getToken(@Query("api_key") String apiKey);
 }

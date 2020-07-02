@@ -11,6 +11,7 @@ public class Constant {
     public static final String API_KEY = "3843fccecb49c3242f778ddad3d50c3b";
     public static final String en = "en-US";
     public static final String vi = "vi-VN";
+    public static final int SUCCESS = 200;
 
     // For layout settings
     public static final String [] LIST_SORT_TYPE = new String[] {"Most Popular", "Highest Rates", "Now Playing", "Upcoming"};

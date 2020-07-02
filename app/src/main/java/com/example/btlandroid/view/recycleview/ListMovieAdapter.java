@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.btlandroid.R;
 import com.example.btlandroid.configs.Constant;
 import com.example.btlandroid.model.Movie;
+import com.example.btlandroid.utils.SaveCurrentMovie;
 import com.example.btlandroid.view.MovieDetail;
 import com.squareup.picasso.Picasso;
 
@@ -51,6 +52,7 @@ public class ListMovieAdapter extends RecyclerView.Adapter<ListMovieAdapter.View
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetail.class);
                 intent.putExtra("movie", listMovies.get(position));
+                SaveCurrentMovie.setCurrentMovie(listMovies.get(position));
                 context.startActivity(intent);
             }
         });
