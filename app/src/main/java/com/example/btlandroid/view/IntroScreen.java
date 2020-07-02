@@ -39,9 +39,7 @@ public class IntroScreen extends AppCompatActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(IntroScreen.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    loadLogin();
                 }
             },2500
         );
