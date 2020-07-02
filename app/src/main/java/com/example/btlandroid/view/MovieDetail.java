@@ -18,17 +18,32 @@ import android.widget.TextView;
 
 import com.example.btlandroid.R;
 import com.example.btlandroid.configs.Constant;
+import com.example.btlandroid.model.Genres;
 import com.example.btlandroid.model.Movie;
 import com.example.btlandroid.model.Trailer;
 import com.example.btlandroid.model.User;
 import com.example.btlandroid.model.UserReview;
+import com.example.btlandroid.model.dataAPI.movie.MovieData;
+import com.example.btlandroid.model.dataAPI.movie.ObjectResponseMovie;
+import com.example.btlandroid.model.dataAPI.review.ObjectResponseReview;
+import com.example.btlandroid.model.dataAPI.review.ReviewData;
+import com.example.btlandroid.model.dataAPI.trailer.ObjectResponseTrailer;
+import com.example.btlandroid.model.dataAPI.trailer.TrailerData;
+import com.example.btlandroid.utils.GetDataService;
+import com.example.btlandroid.utils.GetListGenres;
+import com.example.btlandroid.utils.LoadingProgress;
 import com.example.btlandroid.utils.NetworkReceiver;
+import com.example.btlandroid.utils.RetrofitClientInstance;
 import com.example.btlandroid.view.recycleview.ListReviewAdapter;
 import com.example.btlandroid.view.recycleview.ListSimilarAdapter;
 import com.example.btlandroid.view.recycleview.ListTrailerAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MovieDetail extends AppCompatActivity {
 
@@ -39,24 +54,27 @@ public class MovieDetail extends AppCompatActivity {
     ImageView back;
     ImageView backdrop;
     TextView movieName, releaseDate, rate, genres, summary, headerTitle;
+
     ArrayList<Trailer> listTrailers = new ArrayList<>();
     ArrayList<Movie> listSimilar = new ArrayList<Movie>();
     ArrayList<UserReview> listReviews = new ArrayList<>();
+    Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        init();
+        LoadingProgress.show(MovieDetail.this);
 
-        back = findViewById(R.id.iconBack);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
+        movie = (Movie) getIntent().getSerializableExtra("movie");
+        init();
+        getTrailers();
+        getReviews();
+        getSimilar();
+
+        LoadingProgress.hide();
+
     }
 
     @Override
@@ -79,6 +97,13 @@ public class MovieDetail extends AppCompatActivity {
     }
 
     public void init() {
+        back = findViewById(R.id.iconBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
+            }
+        });
         headerBack = findViewById(R.id.headerBack);
         headerTitle = findViewById(R.id.detailTxt);
         scrollView = findViewById(R.id.scroll);
@@ -104,82 +129,132 @@ public class MovieDetail extends AppCompatActivity {
         }
 
         backdrop = findViewById(R.id.backdrop);
-        Picasso.get().load(Constant.BASE_URL_IMAGE + "/stmYfCUGd8Iy6kAMBr6AmWqx8Bq.jpg").into(backdrop);
+        Picasso.get().load(Constant.BASE_URL_IMAGE + movie.getBackdropPath()).into(backdrop);
         movieName = findViewById(R.id.titleName);
-        movieName.setText("Sonic the Hedgehog");
+        movieName.setText(movie.getName());
         releaseDate = findViewById(R.id.releaseDate);
-        releaseDate.setText("Release Date: 2020-02-12");
+        releaseDate.setText("Release Date: " + movie.getReleaseDate());
         rate = findViewById(R.id.rate);
-        rate.setText("Rate: 7.5/10");
+        rate.setText("Rate: " + movie.getVoteAverage() + "/10");
         genres = findViewById(R.id.genres);
-        genres.setText("Genres: Action, Comedy, Science Fiction, Family");
+
+        String types = "";
+        for(int i = 0;i < movie.getListGenres().size();i++) {
+            types += movie.getListGenres().get(i).getName();
+            if (i != movie.getListGenres().size() - 1) {
+                types += ", ";
+            }
+        }
+
+        genres.setText("Genres: " + types);
         summary = findViewById(R.id.summary);
-        summary.setText("Based on the global blockbuster videogame franchise from Sega, Sonic the Hedgehog tells the story of the world’s speediest hedgehog as he embraces his new home on Earth. In this live-action adventure comedy, Sonic and his new best friend team up to defend the planet from the evil genius Dr. Robotnik and his plans for world domination.");
+        summary.setText(movie.getDescription());
 
         viewListTrailers = findViewById(R.id.listTrailers);
         viewListTrailers.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(MovieDetail.this, RecyclerView.HORIZONTAL,false);
         viewListTrailers.setLayoutManager(layoutManager);
-        listTrailers.add(new Trailer(
-            "/stmYfCUGd8Iy6kAMBr6AmWqx8Bq.jpg",
-            null,
-            "New Official Trailer"
-        ));
-        listTrailers.add(new Trailer(
-                "/stmYfCUGd8Iy6kAMBr6AmWqx8Bq.jpg",
-                null,
-                "Sonic The Hedgehog (2020) - \\\"Classic\\\" - Paramount Pictures"
-        ));
-        listTrailers.add(new Trailer(
-                "/stmYfCUGd8Iy6kAMBr6AmWqx8Bq.jpg",
-                null,
-                "Sonic The Hedgehog (2020) - Big Game Spot - Paramount Pictures"
-        ));
-        ListTrailerAdapter trailerAdapter = new ListTrailerAdapter(listTrailers, MovieDetail.this);
-        viewListTrailers.setAdapter(trailerAdapter);
 
         viewListReview = findViewById(R.id.listReviews);
         viewListReview.setHasFixedSize(true);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(MovieDetail.this, RecyclerView.VERTICAL, false);
         viewListReview.setLayoutManager(layoutManager3);
-        listReviews.add(new UserReview(
-                new User(
-                    0,
-                    "Louisa Moore - Screen Zealots",
-                    null,
-                    null
-                ),
-                "In what could only be a dead-of-winter miracle in the Upside Down, I just saw an inspired-by a video game movie that wasn’t absolutely terrible. There is nothing about “Sonic the Hedgehog” that seems like it will be watchable, much less actually good, but I’ve been proven wrong by this lively, wacky, and campy family film. There’s oodles of fun to be had here by both adults and kids.\\r\\n\\r\\nThis live action adventure comedy is based on the blockbuster SEGA game that centers around a speedy bright blue hedgehog named Sonic. Basing a movie on a flimsy gaming character will be ill-advised at least 95% of the time, but this movie finds the ideal balance between a lively (if basic) original story and well-placed Easter eggs for fans. Here, Sonic (voiced by Ben Schwartz) has a series of misadventures on Earth with his newfound human friend Tom (James Marsden), a small-town police officer. The two have to work together to stop the villainous Dr. Robotnik (Jim Carrey) from capturing Sonic for his evil experiments.\\r\\n\\r\\nThe themes of friendship and loneliness are at play, and the cast does a great job keeping things fun. Marsden is ridiculously likable and goofy as an everyman, and Schwartz brings an empathy that carries the majority of the film with his voice performance. Best of all is Carrey, hamming it up with a manic stamina that’ll remind you why you always loved him in the first place.\\r\\n\\r\\nThere are plenty of action scenes and rude humor (and a couple of strange, over-the-top scenes that read as advertisements for Olive Garden), which are all entertaining enough to recommend “Sonic” for a fun family night out at the movies."
-        ));
-        listReviews.add(new UserReview(
-                new User(
-                    0,
-                    "teamelitedev",
-                    null,
-                    null
-                ),
-                "The world needed a hero -- it got a hedgehog. Powered with incredible speed, Sonic embraces his new home on Earth -- until he accidentally knocks out the power grid, sparking the attention of uncool evil genius Dr. Robotnik. Now, it's supervillain vs. supersonic in an all-out race across the globe to stop Robotnik from using Sonic's unique power to achieve world domination."
-        ));
-        ListReviewAdapter listReviewAdapter = new ListReviewAdapter(listReviews, MovieDetail.this);
-        viewListReview.setAdapter(listReviewAdapter);
 
         viewListSimilar = findViewById(R.id.listSimilar);
         viewListSimilar.setHasFixedSize(true);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(MovieDetail.this, RecyclerView.HORIZONTAL,false);
         viewListSimilar.setLayoutManager(layoutManager2);
-        listSimilar.add(new Movie(
-                "Britt-Marie Was Here", null, 0, 0, "/1Duc3EBiegywczxTWekvy03HWai.jpg", null, null, null, null, null, null
-        ));
-        listSimilar.add(new Movie(
-                "Wasp Network", null, 0, 0, "/fOvqEunubL3wPskvtk2Ficfl0pH.jpg", null, null, null, null, null, null
-        ));
-        listSimilar.add(new Movie(
-                "Britt-Marie Was Here", null, 0, 0, "/1Duc3EBiegywczxTWekvy03HWai.jpg", null, null, null, null, null, null
-        ));
-        listSimilar.add(new Movie(
-                "Wasp Network", null, 0, 0, "/fOvqEunubL3wPskvtk2Ficfl0pH.jpg", null, null, null, null, null, null
-        ));
-        ListSimilarAdapter similarAdapter = new ListSimilarAdapter(listSimilar, MovieDetail.this);
-        viewListSimilar.setAdapter(similarAdapter);
+
+    }
+
+    public void getTrailers() {
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<ObjectResponseTrailer> call = service.getTrailers(
+                movie.getId(),
+                Constant.API_KEY,
+                Constant.en
+        );
+        call.enqueue(new Callback<ObjectResponseTrailer>() {
+            @Override
+            public void onResponse(Call<ObjectResponseTrailer> call, Response<ObjectResponseTrailer> response) {
+                ArrayList<TrailerData> listResults = response.body().getResults();
+                for(TrailerData trailerData : listResults){
+                    listTrailers.add(new Trailer(
+                        movie.getBackdropPath(),
+                        Constant.URL_YOUTUBE + trailerData.getKey(),
+                        trailerData.getName()
+                    ));
+                }
+                ListTrailerAdapter trailerAdapter = new ListTrailerAdapter(listTrailers, MovieDetail.this);
+                viewListTrailers.setAdapter(trailerAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<ObjectResponseTrailer> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void getReviews() {
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<ObjectResponseReview> call = service.getReviews(
+                movie.getId(),
+                Constant.API_KEY,
+                Constant.en
+        );
+        call.enqueue(new Callback<ObjectResponseReview>() {
+            @Override
+            public void onResponse(Call<ObjectResponseReview> call, Response<ObjectResponseReview> response) {
+                ArrayList<ReviewData> listResults = response.body().getResults();
+                for(ReviewData reviewData : listResults){
+                    listReviews.add(new UserReview(
+                        new User(0, reviewData.getAuthor(),null,null),
+                        reviewData.getContent()
+                    ));
+                }
+                ListReviewAdapter listReviewAdapter = new ListReviewAdapter(listReviews, MovieDetail.this);
+                viewListReview.setAdapter(listReviewAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<ObjectResponseReview> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void getSimilar() {
+        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        Call<ObjectResponseMovie> call = service.getSimilar(
+                movie.getId(),
+                Constant.API_KEY,
+                Constant.en
+        );
+        call.enqueue(new Callback<ObjectResponseMovie>() {
+            @Override
+            public void onResponse(Call<ObjectResponseMovie> call, Response<ObjectResponseMovie> response) {
+                ArrayList<MovieData> listResults = response.body().getResults();
+                for(MovieData movieData : listResults){
+                    ArrayList<Genres> list = new ArrayList<>();
+                    for(int id : movieData.getGenre_ids()) {
+                        for (int i = 0; i < GetListGenres.getListGenres().size(); i++) {
+                            if (id == GetListGenres.getListGenres().get(i).getId()) list.add(GetListGenres.getListGenres().get(i));
+                        }
+                    }
+                    listSimilar.add(new Movie(
+                            movieData.getTitle(), movieData.getOverview(), movieData.getId(), movieData.getVote_average(), movieData.getPoster_path(),
+                            movieData.getBackdrop_path(), movieData.getRelease_date(),null, list,null,null
+                    ));
+                }
+                ListSimilarAdapter similarAdapter = new ListSimilarAdapter(listSimilar, MovieDetail.this);
+                viewListSimilar.setAdapter(similarAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<ObjectResponseMovie> call, Throwable t) {
+
+            }
+        });
     }
 }

@@ -1,9 +1,9 @@
 package com.example.btlandroid.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class Movie {
+public class Movie implements Serializable {
 
     private String name;
     private String description;

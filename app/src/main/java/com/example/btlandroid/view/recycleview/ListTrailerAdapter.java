@@ -1,10 +1,13 @@
 package com.example.btlandroid.view.recycleview;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +43,15 @@ public class ListTrailerAdapter extends RecyclerView.Adapter<ListTrailerAdapter.
         Picasso.get().load(Constant.BASE_URL_IMAGE + listTrailers.get(position).getThumbnail()).into(holder.thumbnail);
         holder.thumbnail.getLayoutParams().width = 350;
         holder.name.setText(listTrailers.get(position).getName());
+        holder.videoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(listTrailers.get(position).getUrl()));
+                intent.setPackage("com.google.android.youtube");
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -48,12 +60,14 @@ public class ListTrailerAdapter extends RecyclerView.Adapter<ListTrailerAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout videoLayout;
         ImageView thumbnail;
         TextView name;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.thumbnail);
             name = itemView.findViewById(R.id.videoName);
+            videoLayout = itemView.findViewById(R.id.trailer);
         }
     }
 }

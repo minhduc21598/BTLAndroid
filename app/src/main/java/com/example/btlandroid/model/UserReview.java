@@ -1,6 +1,8 @@
 package com.example.btlandroid.model;
 
-public class UserReview {
+import java.io.Serializable;
+
+public class UserReview implements Serializable {
 
     private User user;
     private String userComment;

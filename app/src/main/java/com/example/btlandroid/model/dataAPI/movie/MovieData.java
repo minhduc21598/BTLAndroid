@@ -1,4 +1,4 @@
-package com.example.btlandroid.model.dataAPI;
+package com.example.btlandroid.model.dataAPI.movie;
 
 import java.util.ArrayList;
 

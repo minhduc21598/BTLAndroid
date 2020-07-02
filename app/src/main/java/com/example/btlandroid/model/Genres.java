@@ -1,6 +1,8 @@
 package com.example.btlandroid.model;
 
-public class Genres {
+import java.io.Serializable;
+
+public class Genres implements Serializable {
 
     private int id;
     private String name;

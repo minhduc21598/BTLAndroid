@@ -1,6 +1,8 @@
 package com.example.btlandroid.model;
 
-public class Trailer {
+import java.io.Serializable;
+
+public class Trailer implements Serializable {
 
     private String thumbnail;
     private String url;

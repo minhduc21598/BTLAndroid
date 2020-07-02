@@ -1,6 +1,7 @@
 package com.example.btlandroid.view.recycleview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.btlandroid.R;
 import com.example.btlandroid.configs.Constant;
 import com.example.btlandroid.model.Movie;
+import com.example.btlandroid.view.MovieDetail;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,6 +43,11 @@ public class ListSimilarAdapter extends RecyclerView.Adapter<ListSimilarAdapter.
         holder.similarContainer.getLayoutParams().width = 300;
         Picasso.get().load(Constant.BASE_URL_IMAGE + listSimilar.get(position).getPosterPath()).into(holder.similarImage);
         holder.similarName.setText(listSimilar.get(position).getName());
+        holder.similarContainer.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MovieDetail.class);
+            intent.putExtra("movie", listSimilar.get(position));
+            context.startActivity(intent);
+        });
     }
 
     @Override
