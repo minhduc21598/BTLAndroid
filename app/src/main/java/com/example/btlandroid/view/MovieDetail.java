@@ -59,6 +59,11 @@ public class MovieDetail extends AppCompatActivity {
     ArrayList<Trailer> listTrailers = new ArrayList<>();
     ArrayList<Movie> listSimilar = new ArrayList<Movie>();
     ArrayList<UserReview> listReviews = new ArrayList<>();
+
+    ListTrailerAdapter trailerAdapter;
+    ListReviewAdapter listReviewAdapter;
+    ListSimilarAdapter similarAdapter;
+
     Movie movie;
 
     @Override
@@ -155,16 +160,22 @@ public class MovieDetail extends AppCompatActivity {
         viewListTrailers.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(MovieDetail.this, RecyclerView.HORIZONTAL,false);
         viewListTrailers.setLayoutManager(layoutManager);
+        trailerAdapter = new ListTrailerAdapter(listTrailers, MovieDetail.this);
+        viewListTrailers.setAdapter(trailerAdapter);
 
         viewListReview = findViewById(R.id.listReviews);
         viewListReview.setHasFixedSize(true);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(MovieDetail.this, RecyclerView.VERTICAL, false);
         viewListReview.setLayoutManager(layoutManager3);
+        listReviewAdapter = new ListReviewAdapter(listReviews, MovieDetail.this);
+        viewListReview.setAdapter(listReviewAdapter);
 
         viewListSimilar = findViewById(R.id.listSimilar);
         viewListSimilar.setHasFixedSize(true);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(MovieDetail.this, RecyclerView.HORIZONTAL,false);
         viewListSimilar.setLayoutManager(layoutManager2);
+        similarAdapter = new ListSimilarAdapter(listSimilar, MovieDetail.this);
+        viewListSimilar.setAdapter(similarAdapter);
 
     }
 
@@ -186,8 +197,7 @@ public class MovieDetail extends AppCompatActivity {
                         trailerData.getName()
                     ));
                 }
-                ListTrailerAdapter trailerAdapter = new ListTrailerAdapter(listTrailers, MovieDetail.this);
-                viewListTrailers.setAdapter(trailerAdapter);
+                trailerAdapter.setList(listTrailers);
             }
 
             @Override
@@ -214,8 +224,7 @@ public class MovieDetail extends AppCompatActivity {
                         reviewData.getContent()
                     ));
                 }
-                ListReviewAdapter listReviewAdapter = new ListReviewAdapter(listReviews, MovieDetail.this);
-                viewListReview.setAdapter(listReviewAdapter);
+                listReviewAdapter.setList(listReviews);
             }
 
             @Override
@@ -248,8 +257,7 @@ public class MovieDetail extends AppCompatActivity {
                             movieData.getBackdrop_path(), movieData.getRelease_date(),null, list,null,null
                     ));
                 }
-                ListSimilarAdapter similarAdapter = new ListSimilarAdapter(listSimilar, MovieDetail.this);
-                viewListSimilar.setAdapter(similarAdapter);
+                similarAdapter.setList(listSimilar);
             }
 
             @Override

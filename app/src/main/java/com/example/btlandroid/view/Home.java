@@ -9,8 +9,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -40,18 +42,21 @@ import retrofit2.Response;
 public class Home extends AppCompatActivity {
 
     NetworkReceiver networkReceiver = new NetworkReceiver();
-    ImageButton btnSearch;
+    ImageButton btnSearch, btnFilter;
     TextView label;
     EditText inputSearch;
     RecyclerView viewListMovie;
     SwipeRefreshLayout refreshLayout;
 
+    ListMovieAdapter listMovieAdapter;
+
     ArrayList<Movie> listMovies = new ArrayList<Movie>();
     int page = 1;
-    String type = "filter";
+    String typeAction = "filter";
+    String keyWordSearch = "";
     int selectedType = 0;
 
-    ImageButton btFilter;
+    ProgressBar footerLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +73,9 @@ public class Home extends AppCompatActivity {
     }
 
     public void initComponent() {
-        btFilter = findViewById(R.id.btnFilter);
-        btFilter.setOnClickListener(v -> {
+        footerLoading = findViewById(R.id.footerLoading);
+        btnFilter = findViewById(R.id.btnFilter);
+        btnFilter.setOnClickListener(v -> {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(Home.this);
             mBuilder.setTitle("Sort By");
             mBuilder.setSingleChoiceItems(Constant.LIST_SORT_TYPE, selectedType, new DialogInterface.OnClickListener() {
@@ -106,9 +112,10 @@ public class Home extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                type = "search";
+                typeAction = "search";
                 LoadingProgress.show(Home.this);
-                searchMovie(inputSearch.getText().toString().trim(),false);
+                keyWordSearch = inputSearch.getText().toString().trim();
+                searchMovie(keyWordSearch,false);
                 LoadingProgress.hide();
             }
 
@@ -135,8 +142,30 @@ public class Home extends AppCompatActivity {
     public void initRecycleView() {
         viewListMovie = findViewById(R.id.listmovie);
         viewListMovie.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(Home.this,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(Home.this,2);
         viewListMovie.setLayoutManager(layoutManager);
+        listMovieAdapter = new ListMovieAdapter(listMovies,Home.this);
+        viewListMovie.setAdapter(listMovieAdapter);
+        viewListMovie.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (layoutManager.findLastVisibleItemPosition() == listMovies.size() - 1) {
+                    footerLoading.setVisibility(View.VISIBLE);
+                    page += 1;
+                    if (typeAction == "filter") {
+                        getListMovie(getMovieType(selectedType),false,true);
+                    } else {
+                        searchMovie(keyWordSearch,true);
+                    }
+                }
+            }
+        });
         getListMovie(getMovieType(selectedType),false,false);
     }
 
@@ -156,7 +185,7 @@ public class Home extends AppCompatActivity {
     }
 
     public void getListMovie(String type, boolean refreshing, boolean loadMore) {
-        if (!refreshing) {
+        if (!refreshing && !loadMore) {
             LoadingProgress.show(Home.this);
         }
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -182,11 +211,13 @@ public class Home extends AppCompatActivity {
                             movie.getTitle(), movie.getOverview(), movie.getId(), movie.getVote_average(), movie.getPoster_path(),
                             movie.getBackdrop_path(), movie.getRelease_date(),null, list,null,null
                     ));
+                    listMovieAdapter.setList(listMovies);
                 }
-                ListMovieAdapter listMovieAdapter = new ListMovieAdapter(listMovies, Home.this);
-                viewListMovie.setAdapter(listMovieAdapter);
-                if (!refreshing) {
+                if (!refreshing && !loadMore) {
                     LoadingProgress.hide();
+                }
+                if (loadMore) {
+                    footerLoading.setVisibility(View.GONE);
                 }
             }
 
@@ -216,6 +247,7 @@ public class Home extends AppCompatActivity {
     }
 
     public void refreshing() {
+        page = 1;
         refreshLayout = findViewById(R.id.pullToRefresh);
         refreshLayout.setOnRefreshListener(() -> {
             getListMovie(getMovieType(selectedType),true,false);
@@ -249,8 +281,10 @@ public class Home extends AppCompatActivity {
                                 movie.getBackdrop_path(), movie.getRelease_date(),null, list,null,null
                         ));
                     }
-                    ListMovieAdapter listMovieAdapter = new ListMovieAdapter(listMovies, Home.this);
-                    viewListMovie.setAdapter(listMovieAdapter);
+                    listMovieAdapter.setList(listMovies);
+                    if (loadMore) {
+                        footerLoading.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -267,6 +301,5 @@ public class Home extends AppCompatActivity {
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
     }
-
 
 }

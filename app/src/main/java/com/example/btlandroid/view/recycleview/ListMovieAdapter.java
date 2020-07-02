@@ -65,6 +65,11 @@ public class ListMovieAdapter extends RecyclerView.Adapter<ListMovieAdapter.View
         return listMovies.size();
     }
 
+    public void setList(ArrayList<Movie> listMovies) {
+        this.listMovies = listMovies;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView movieName;
         ImageView posterMovie;

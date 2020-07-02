@@ -59,6 +59,11 @@ public class ListTrailerAdapter extends RecyclerView.Adapter<ListTrailerAdapter.
         return listTrailers.size();
     }
 
+    public void setList(ArrayList<Trailer> listTrailers) {
+        this.listTrailers = listTrailers;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout videoLayout;
         ImageView thumbnail;

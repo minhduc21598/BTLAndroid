@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.btlandroid.R;
 import com.example.btlandroid.configs.Constant;
 import com.example.btlandroid.model.Movie;
+import com.example.btlandroid.utils.SaveCurrentMovie;
 import com.example.btlandroid.view.MovieDetail;
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +47,7 @@ public class ListSimilarAdapter extends RecyclerView.Adapter<ListSimilarAdapter.
         holder.similarContainer.setOnClickListener(v -> {
             Intent intent = new Intent(context, MovieDetail.class);
             intent.putExtra("movie", listSimilar.get(position));
+            SaveCurrentMovie.setCurrentMovie(listSimilar.get(position));
             context.startActivity(intent);
         });
     }
@@ -53,6 +55,11 @@ public class ListSimilarAdapter extends RecyclerView.Adapter<ListSimilarAdapter.
     @Override
     public int getItemCount() {
         return listSimilar.size();
+    }
+
+    public void setList(ArrayList<Movie> listSimilar) {
+        this.listSimilar = listSimilar;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

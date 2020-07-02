@@ -43,6 +43,11 @@ public class ListReviewAdapter extends RecyclerView.Adapter<ListReviewAdapter.Vi
         return listReviews.size();
     }
 
+    public void setList(ArrayList<UserReview> listReviews) {
+        this.listReviews = listReviews;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView author, comment;
